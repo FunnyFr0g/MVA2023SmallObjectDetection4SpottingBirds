@@ -5,8 +5,9 @@ data_root = LIB_ROOT_DIR + '/data/'
 
 
 data = dict(
-    train=dict('drones_only/train_annotations.json',
-        img_prefix=data_root + 'drones_only/images/train',
+    train=dict(        
+        ann_file=data_root + 'drones_only/train_annotations.json',
+        img_prefix=data_root + 'drones_only/images/train/',
     ),
     val=dict(
         ann_file=data_root + 'drones_only/val_annotations.json',

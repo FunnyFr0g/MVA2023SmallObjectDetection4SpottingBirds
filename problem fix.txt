@@ -1,0 +1,17 @@
+установка mmdetection:
+pip install -U openmim
+mim install mmcv-full==1.6.0
+pip install matplotlib
+
+установка зависимостей:
+cd /root/mva23/MVA2023SmallObjectDetection4SpottingBirds
+pip install -v -e .
+
+
+Обновление компонент:
+apt update
+apt install -y libgl1-mesa-glx libglib2.0-0
+
+
+Запуск тренировки:
+PYTHONPATH=/root/mva23/MVA2023SmallObjectDetection4SpottingBirds ./dist_train_test.sh
