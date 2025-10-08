@@ -5,18 +5,18 @@ data_root = LIB_ROOT_DIR + '/data/'
 
 
 data = dict(
-    train=dict(        
-        ann_file=data_root + 'drones_only/train_annotations.json',
-        img_prefix=data_root + 'drones_only/images/train/',
-    ),
+    train=dict(
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/train_annotations.json',
+        img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/train/',
+        ),
     val=dict(
-        ann_file=data_root + 'drones_only/val_annotations.json',
-        img_prefix=data_root + 'drones_only/images/val/',
-    ),
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations.json',
+        img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/val/',
+       ),
     test=dict(
-        ann_file=data_root + 'drones_only/val_annotations.json',
-        img_prefix=data_root + 'drones_only/images/val/',
-    )
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations.json',
+        img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/val/',
+       )
 )
 
 lr_config = dict(
