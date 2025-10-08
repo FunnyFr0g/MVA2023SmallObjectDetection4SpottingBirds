@@ -1,7 +1,12 @@
+apt-get update
+apt-get install -y cuda-toolkit-11-8
+
 установка mmdetection:
 pip install -U openmim
 mim install mmcv-full==1.6.0
 pip install matplotlib
+pip install yapf==0.30.0
+
 
 установка зависимостей:
 cd /root/mva23/MVA2023SmallObjectDetection4SpottingBirds
