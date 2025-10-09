@@ -60,21 +60,23 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=8,
-    workers_per_gpu=1,
+    samples_per_gpu=16,
+    workers_per_gpu=0,
     train=dict(
         type=dataset_type,
-        ann_file= '/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/train_annotations.json',
+        ann_file= '/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/train_annotations_class0.json',
         img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/train/',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
-        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations.json',
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations_class0.json',
         img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/val/',
-        pipeline=test_pipeline),
+        pipeline=test_pipeline,
+        ),
     test=dict(
         type=dataset_type,
-        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations.json',
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations_class0.json',
         img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/val/',
-        pipeline=test_pipeline))
+        pipeline=test_pipeline,
+        ))
 evaluation = dict(interval=1, metric='bbox')
