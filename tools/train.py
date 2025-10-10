@@ -20,6 +20,8 @@ from mmdet.models import build_detector
 from mmdet.utils import (collect_env, get_device, get_root_logger,
                          setup_multi_processes, update_data_root)
 
+from clearml import Task                         
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
@@ -108,6 +110,19 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
+
+    cfg_dict = cfg.to_dict()
+
+    task = Task.init(
+        project_name="SmallObjectDetection",  # Название проекта
+        task_name="Baseline-finetuning",    # Название задачи
+        )
+
+    task.connect_configuration(cfg_dict)
+
+    task.connect(cfg_dict, name="Config")
+
+    
 
     # update data root according to MMDET_DATASETS
     update_data_root(cfg)
