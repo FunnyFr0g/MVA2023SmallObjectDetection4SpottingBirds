@@ -26,6 +26,6 @@ lr_config = dict(
     warmup_ratio=1.0 / 1000,
     step=[15, 18])
 runner = dict(max_epochs=20)
-evaluation = dict(interval=1, metric='bbox')
+evaluation = dict(interval=20, metric='bbox')
 load_from = LIB_ROOT_DIR + '/work_dirs/centernet_resnet18_140e_coco/latest.pth'
 checkpoint_config = dict(interval=1)
