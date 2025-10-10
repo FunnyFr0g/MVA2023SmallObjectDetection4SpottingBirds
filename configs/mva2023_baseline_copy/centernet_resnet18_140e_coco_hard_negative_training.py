@@ -38,16 +38,16 @@ data = dict(
     train=dict(
         pipeline=train_pipeline,
         hard_negative_file=LIB_ROOT_DIR + '/work_dirs/centernet_resnet18_140e_coco/train_coco_hard_negative.json',  # ---
-        ann_file=data_root + 'mva2023_sod4bird_train/annotations/split_train_coco.json',
-        img_prefix=data_root + 'mva2023_sod4bird_train/images/',
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/train_annotations_class0.json',
+        img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/train/',
     ),
     val=dict(
-        ann_file=data_root + 'drone2021/annotations/split_val_coco.json',
-        img_prefix=data_root + 'drone2021/images/',
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations_class0.json',
+        img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/val/',
     ),
     test=dict(
-        ann_file=data_root + 'drone2021/annotations/split_val_coco.json',
-        img_prefix=data_root + 'drone2021/images/',
+        ann_file='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations_class0.json',
+        img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/val/',
     )
 )
 

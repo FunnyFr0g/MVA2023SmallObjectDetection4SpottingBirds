@@ -29,7 +29,7 @@ bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_
 # echo "###############################"
 # echo "Step 3: Generate predictions on data/mva2023_sod4bird_train to select hard negatives examples"
 # echo "###############################"
-# CONFIG=configs/mva2023_baseline/centernet_resnet18_140e_coco_sample_hard_negative.py
+# CONFIG=configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_sample_hard_negative.py
 # CHECKPOINT=work_dirs/centernet_resnet18_140e_coco_finetune/latest.pth
 # NNODES=${NNODES:-1}
 # NODE_RANK=${NODE_RANK:-0}
@@ -60,7 +60,7 @@ bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_
 # echo "###############################"
 # echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
 # echo "###############################"
-# bash tools/dist_train.sh  configs/mva2023_baseline/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
+# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
 
 
 # ###############################
@@ -69,7 +69,7 @@ bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_
 # echo "###############################"
 # echo "Step 5: To generate the predictions for submission, the result will be saved in results.bbox.json."
 # echo "###############################"
-# bash tools/dist_test.sh configs/mva2023_baseline/centernet_resnet18_140e_coco_inference.py work_dirs/centernet_resnet18_140e_coco_hard_negative_training/latest.pth \
+# bash tools/dist_test.sh configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_inference.py work_dirs/centernet_resnet18_140e_coco_hard_negative_training/latest.pth \
 # 2 --format-only --eval-options jsonfile_prefix=results
 
 # _time=`date +%Y%m%d%H%M`

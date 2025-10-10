@@ -29,8 +29,9 @@ def update_category_ids(input_file1, input_file2, output_file1, output_file2, ne
         for category in data.get('categories', []):
             if category.get('id') == 1:
                 category['id'] = 0
-                category['name'] = new_class_name
-                categories_updated += 1
+                
+            category['name'] = new_class_name
+            categories_updated += 1
         
         # Сохраняем обновленный файл
         with open(output_file, 'w', encoding='utf-8') as f:
