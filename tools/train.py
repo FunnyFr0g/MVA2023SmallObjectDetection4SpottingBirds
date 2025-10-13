@@ -115,15 +115,15 @@ def main():
 
     task = Task.init(
         project_name="SmallObjectDetection",  # Название проекта
-        task_name="Baseline-finetuning",    # Название задачи
+        task_name="Baseline-hardnegative-training",    # Название задачи
         )
 
     task.connect_configuration(cfg_dict)
 
     task.connect(cfg_dict, name="Config")
 
-    
 
+    
     # update data root according to MMDET_DATASETS
     update_data_root(cfg)
 

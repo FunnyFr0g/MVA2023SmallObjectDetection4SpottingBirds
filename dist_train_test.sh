@@ -14,13 +14,13 @@ GPU_NUM=1
 # bash tools/dist_train.sh  configs/mva2023_baseline/centernet_resnet18_140e_coco.py $GPU_NUM
 
 
-###############################
-# Step 2: fine-tuning on data/mva2023_sod4bird_train
-###############################
-echo "###############################"
-echo "Step 2: fine-tuning on data/mva2023_sod4bird_train"
-echo "###############################"
-bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_finetune.py $GPU_NUM
+# ###############################
+# # Step 2: fine-tuning on data/mva2023_sod4bird_train
+# ###############################
+# echo "###############################"
+# echo "Step 2: fine-tuning on data/mva2023_sod4bird_train"
+# echo "###############################"
+# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_finetune.py $GPU_NUM
 
 
 # ###############################
@@ -50,17 +50,17 @@ bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_
 #     --hard-negative-file work_dirs/centernet_resnet18_140e_coco_finetune/train_coco_hard_negative.json \
 #     --hard-negative-config num_max_det=10 pos_iou_thr=1e-5 score_thd=0.05 nms_thd=0.05
     
-# # The setting for 'hard-negative-config' is the default setting for generating the hard negative examples. Please feel free to modify it.
-# # --------------------------
+# The setting for 'hard-negative-config' is the default setting for generating the hard negative examples. Please feel free to modify it.
+--------------------------
 
 
-# ###############################
-# # Step 4: Hard negative training  on data/mva2023_sod4bird_train
-# ###############################
-# echo "###############################"
-# echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
-# echo "###############################"
-# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
+###############################
+# Step 4: Hard negative training  on data/mva2023_sod4bird_train
+###############################
+echo "###############################"
+echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
+echo "###############################"
+bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
 
 
 # ###############################
