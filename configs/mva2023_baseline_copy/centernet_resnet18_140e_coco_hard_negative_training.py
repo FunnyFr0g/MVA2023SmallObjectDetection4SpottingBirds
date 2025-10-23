@@ -59,3 +59,5 @@ lr_config = dict(
     step=[15, 18])
 runner = dict(max_epochs=20)
 load_from = LIB_ROOT_DIR + '/work_dirs/centernet_resnet18_140e_coco_finetune/latest.pth'
+
+log_config = dict(interval=1, hooks=[dict(type='TextLoggerHook')])
