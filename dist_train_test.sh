@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export TORCH_DISTRIBUTED_DEBUG=INFO 
+export TORCH_DISTRIBUTED_DEBUG=DETAIL
 export CUDA_VISIBLE_DEVICES=0
 export OMP_NUM_THREADS=16
 export MKL_NUM_THREADS=16
@@ -14,13 +14,13 @@ GPU_NUM=1
 # bash tools/dist_train.sh  configs/mva2023_baseline/centernet_resnet18_140e_coco.py $GPU_NUM
 
 
-# ###############################
-# # Step 2: fine-tuning on data/mva2023_sod4bird_train
-# ###############################
-# echo "###############################"
-# echo "Step 2: fine-tuning on data/mva2023_sod4bird_train"
-# echo "###############################"
-# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_finetune.py $GPU_NUM
+###############################
+# Step 2: fine-tuning on data/mva2023_sod4bird_train
+###############################
+echo "###############################"
+echo "Step 2: fine-tuning on data/mva2023_sod4bird_train"
+echo "###############################"
+bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_finetune.py $GPU_NUM
 
 
 # ###############################
@@ -57,10 +57,10 @@ GPU_NUM=1
 ###############################
 # Step 4: Hard negative training  on data/mva2023_sod4bird_train
 ###############################
-echo "###############################"
-echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
-echo "###############################"
-bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
+# echo "###############################"
+# echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
+# echo "###############################"
+# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
 
 
 # ###############################

@@ -20,7 +20,8 @@ from mmdet.models import build_detector
 from mmdet.utils import (collect_env, get_device, get_root_logger,
                          setup_multi_processes, update_data_root)
 
-from clearml import Task                         
+from clearml import Task   
+USE_CLEARML = True                      
 
 
 def parse_args():
@@ -111,16 +112,17 @@ def main():
 
     cfg = Config.fromfile(args.config)
 
-    cfg_dict = cfg.to_dict()
+    if USE_CLEARML:
+        cfg_dict = cfg.to_dict()
 
-    task = Task.init(
-        project_name="SmallObjectDetection",  # Название проекта
-        task_name="Baseline-hardnegative-training",    # Название задачи
-        )
+        task = Task.init(
+            project_name="SmallObjectDetection",  # Название проекта
+            task_name="Baseline-hardnegative-training",    # Название задачи
+            )
 
-    task.connect_configuration(cfg_dict)
+        task.connect_configuration(cfg_dict)
 
-    task.connect(cfg_dict, name="Config")
+        task.connect(cfg_dict, name="Config")
 
 
     
@@ -246,6 +248,13 @@ def main():
         validate=(not args.no_validate),
         timestamp=timestamp,
         meta=meta)
+
+    
+    if USE_CLEARML:
+        task.upload_artifact(
+        name='work_dir',
+        artifact_object=cfg.work_dir,
+        )
 
 
 if __name__ == '__main__':

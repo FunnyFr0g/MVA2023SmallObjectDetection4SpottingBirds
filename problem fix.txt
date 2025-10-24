@@ -14,7 +14,7 @@ pip install yapf==0.30.0
 установка зависимостей:
 cd /root/mva23/MVA2023SmallObjectDetection4SpottingBirds
 pip install -v -e .
-
+pip install opencv-python
 
 
 
