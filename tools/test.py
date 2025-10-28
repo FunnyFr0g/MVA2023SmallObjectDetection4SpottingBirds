@@ -18,7 +18,8 @@ from mmdet.datasets import (build_dataloader, build_dataset,
 from mmdet.models import build_detector
 from mmdet.utils import (build_ddp, build_dp, compat_cfg, get_device,
                          setup_multi_processes, update_data_root)
-
+from clearml import Task   
+USE_CLEARML = True    
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -272,7 +273,7 @@ def main():
             if args.work_dir is not None and rank == 0:
                 mmcv.dump(metric_dict, json_file)
 
-      if USE_CLEARML:
+    if USE_CLEARML:
         task.upload_artifact(
         name='work_dir',
         artifact_object=args.work_dir,

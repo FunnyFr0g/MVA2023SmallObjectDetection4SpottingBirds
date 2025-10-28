@@ -4,8 +4,8 @@ data_root = 'data/'
 data = dict(
     test=dict(
         samples_per_gpu=4,
-        ann_file=data_root + 'mva2023_sod4bird_pub_test/annotations/public_test_coco_empty_ann.json',
-        img_prefix=data_root + 'mva2023_sod4bird_pub_test/images/',
+        ann_file='/root/mva23/MVA2023SmallObjectDetection4SpottingBirds/anns/empty_val_annotations.json',
+        img_prefix='/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/images/val/',
     ) 
 )
 

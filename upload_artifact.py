@@ -1,12 +1,12 @@
 from clearml import Task
 
-task = Task.get_task(task_id='defc556e31e8404184ecdfa0ed4dd9cb')
+task = Task.get_task(task_id='f2a541768d774634845430be688f5a4b')
 
 task.started()
 
 task.upload_artifact(
-    name='hard-negative samples',
-    artifact_object='/root/mva23/MVA2023SmallObjectDetection4SpottingBirds/work_dirs/centernet_resnet18_140e_coco_finetune/train_coco_hard_negative.json'
+    name='val predictions json',
+    artifact_object='/root/mva23/MVA2023SmallObjectDetection4SpottingBirds/results.bbox.json'
 )
 print('Артефакт загружен')
 
