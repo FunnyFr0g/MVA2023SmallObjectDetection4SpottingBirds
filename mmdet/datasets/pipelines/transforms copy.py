@@ -1895,172 +1895,77 @@ class RandomCenterCropPadWithHardNegative(RandomCenterCropPad):
         self.hard_negative_ratio = hard_negative_ratio
 
     def _train_aug(self, results):
+        """Random crop and around padding the original image.
+
+        Args:
+            results (dict): Image infomations in the augment pipeline.
+
+        Returns:
+            results (dict): The updated dict.
+        """
         img = results['img']
         h, w, c = img.shape
 
-        # ВЫБОР между gt_bboxes и hard_negatives
-        use_hard_negatives = np.random.uniform(0, 1) < self.hard_negative_ratio
-        
-        if use_hard_negatives and 'hard_negatives' in results and len(results['hard_negatives']) > 0:
+        if np.random.uniform(0, 1) < self.hard_negative_ratio:
             boxes = results['hard_negatives']
-            box_type = 'hard_negatives'
-            # print(f"Using hard negatives: {len(boxes)} boxes")
         else:
-            boxes = results['gt_bboxes'] 
-            box_type = 'gt_bboxes'
-            # print(f"Using GT bboxes: {len(boxes)} boxes")
+            boxes = results['gt_bboxes']
 
-        # УВЕЛИЧИМ ДОПУСТИМЫЕ ПОПЫТКИ И ОСЛАБИМ ТРЕБОВАНИЯ
-        max_attempts = 50  # Уменьшим, но сделаем условия проще
-        attempt = 0
-        
-        while attempt < max_attempts:
-            attempt += 1
-            
-            # ИСПРАВЛЕНИЕ: Если нет боксов, принимаем случайный кроп
-            if len(boxes) == 0:
-                # print("No boxes found, using random crop")
-                scale = random.choice(self.ratios)
-                new_h = int(self.crop_size[0] * scale)
-                new_w = int(self.crop_size[1] * scale)
-                
-                # Случайный центр
-                center_x = random.randint(0, w)
-                center_y = random.randint(0, h)
-                
-                cropped_img, border, patch = self._crop_image_and_paste(
-                    img, [center_y, center_x], [new_h, new_w])
-                
-                results['img'] = cropped_img
-                results['img_shape'] = cropped_img.shape
-                results['pad_shape'] = cropped_img.shape
-                
-                # Обновляем ВСЕ bbox_fields (даже если они пустые)
-                self._update_all_bboxes(results, patch, [new_h, new_w])
-                return results
-            
-            # Есть боксы - пытаемся найти кроп содержащий хотя бы один
+        while True:
             scale = random.choice(self.ratios)
             new_h = int(self.crop_size[0] * scale)
             new_w = int(self.crop_size[1] * scale)
-            
-            # РАСШИРИМ ОБЛАСТЬ ПОИСКА ЦЕНТРА
-            h_border = max(1, self._get_border(min(64, self.border), h))  # Уменьшим border
-            w_border = max(1, self._get_border(min(64, self.border), w))
+            h_border = self._get_border(self.border, h)
+            w_border = self._get_border(self.border, w)
 
-            for i in range(30):  # Уменьшим внутренние попытки
-                center_x = random.randint(max(0, w_border), min(w, w - w_border))
-                center_y = random.randint(max(0, h_border), min(h, h - h_border))
+            for i in range(50):
+                center_x = random.randint(low=w_border, high=w - w_border)
+                center_y = random.randint(low=h_border, high=h - h_border)
 
                 cropped_img, border, patch = self._crop_image_and_paste(
                     img, [center_y, center_x], [new_h, new_w])
 
                 mask = self._filter_boxes(patch, boxes)
-                
-                # ОСЛАБИМ ТРЕБОВАНИЯ: принимаем кроп если есть хотя бы один бокс
-                # ИЛИ если боксы есть но не попали, пробуем еще немного
-                if mask.any():
-                    # УСПЕШНЫЙ КРОП
-                    results['img'] = cropped_img
-                    results['img_shape'] = cropped_img.shape
-                    results['pad_shape'] = cropped_img.shape
-                    
-                    self._update_all_bboxes(results, patch, [new_h, new_w])
-                    # print(f"Found valid crop after {attempt} attempts")
-                    return results
+                # if image do not have valid bbox, any crop patch is valid.
+                if not mask.any() and len(boxes) > 0:
+                    continue
 
-        # ЕСЛИ НЕ НАШЛИ ПОДХОДЯЩИЙ КРОП - используем центральный кроп
-        print(f"Warning: Using fallback center crop after {max_attempts} failed attempts")
-        scale = 1.0  # Используем базовый масштаб
-        new_h = int(self.crop_size[0] * scale)
-        new_w = int(self.crop_size[1] * scale)
-        center_x, center_y = w // 2, h // 2
-        
-        cropped_img, border, patch = self._crop_image_and_paste(
-            img, [center_y, center_x], [new_h, new_w])
-        
-        results['img'] = cropped_img
-        results['img_shape'] = cropped_img.shape
-        results['pad_shape'] = cropped_img.shape
-        self._update_all_bboxes(results, patch, [new_h, new_w])
-        return results
+                results['img'] = cropped_img
+                results['img_shape'] = cropped_img.shape
+                results['pad_shape'] = cropped_img.shape
 
+                x0, y0, x1, y1 = patch
 
-    def _update_all_bboxes(self, results, patch, new_size):
-        """Обновляет все bbox fields (gt_bboxes и hard_negatives)"""
-        new_h, new_w = new_size
-        x0, y0, x1, y1 = patch
-        
-        for key in results.get('bbox_fields', []):
-            if key not in results or len(results[key]) == 0:
-                # Убедимся что поле существует и имеет правильную форму
-                if key == 'gt_bboxes':
-                    results[key] = np.zeros((0, 4), dtype=np.float32)
-                elif key == 'hard_negatives':
-                    results[key] = np.zeros((0, 4), dtype=np.float32)
-                continue
-                
-            boxes = results[key].copy()
-            # ЗАЩИТА: проверяем что boxes имеют правильную форму
-            if boxes.ndim != 2 or boxes.shape[1] != 4:
-                print(f"Warning: Invalid boxes shape in {key}: {boxes.shape}")
-                results[key] = np.zeros((0, 4), dtype=np.float32)
-                continue
-                
-            mask = self._filter_boxes(patch, boxes)
-            filtered_boxes = boxes[mask]
-            
-            if len(filtered_boxes) == 0:
-                results[key] = np.zeros((0, 4), dtype=np.float32)
-                continue
-                
-            # Трансформируем bboxes
-            center_x, center_y = (x0 + x1) // 2, (y0 + y1) // 2
-            left_w, top_h = center_x - x0, center_y - y0
-            cropped_center_x, cropped_center_y = new_w // 2, new_h // 2
+                left_w, top_h = center_x - x0, center_y - y0
+                cropped_center_x, cropped_center_y = new_w // 2, new_h // 2
 
-            # ПРЕОБРАЗОВАНИЕ КООРДИНАТ
-            filtered_boxes[:, 0:4:2] += cropped_center_x - left_w - x0  # x координаты
-            filtered_boxes[:, 1:4:2] += cropped_center_y - top_h - y0   # y координаты
-            
-            # ЖЕСТКОЕ ОБРЕЗАНИЕ К ГРАНИЦАМ ИЗОБРАЖЕНИЯ
-            if self.bbox_clip_border:
-                filtered_boxes[:, 0] = np.clip(filtered_boxes[:, 0], 0, new_w - 1)  # x1
-                filtered_boxes[:, 1] = np.clip(filtered_boxes[:, 1], 0, new_h - 1)  # y1  
-                filtered_boxes[:, 2] = np.clip(filtered_boxes[:, 2], 0, new_w - 1)  # x2
-                filtered_boxes[:, 3] = np.clip(filtered_boxes[:, 3], 0, new_h - 1)  # y2
-                
-            # ФИЛЬТРАЦИЯ НЕВАЛИДНЫХ BBOXES
-            keep = (filtered_boxes[:, 2] > filtered_boxes[:, 0]) & (
-                filtered_boxes[:, 3] > filtered_boxes[:, 1])
-            filtered_boxes = filtered_boxes[keep]
-            
-            # ДОПОЛНИТЕЛЬНАЯ ПРОВЕРКА: удаляем слишком маленькие bboxes
-            if len(filtered_boxes) > 0:
-                widths = filtered_boxes[:, 2] - filtered_boxes[:, 0]
-                heights = filtered_boxes[:, 3] - filtered_boxes[:, 1]
-                size_keep = (widths >= 1) & (heights >= 1)  # минимум 1 пиксель
-                filtered_boxes = filtered_boxes[size_keep]
-            
-            results[key] = filtered_boxes
-            
-            # Особенная обработка для gt_bboxes
-            if key == 'gt_bboxes' and 'gt_labels' in results and len(results['gt_labels']) > 0:
-                if len(mask) == len(results['gt_labels']):  # Проверка соответствия размеров
-                    labels = results['gt_labels'][mask]
-                    if len(keep) == len(labels):  # Еще одна проверка
-                        labels = labels[keep]
-                        if len(size_keep) == len(labels) if 'size_keep' in locals() else True:
-                            if 'size_keep' in locals():
-                                labels = labels[size_keep]
+                # crop bboxes accordingly and clip to the image boundary
+                for key in results.get('bbox_fields', []):
+                    mask = self._filter_boxes(patch, results[key])
+                    bboxes = results[key][mask]
+                    bboxes[:, 0:4:2] += cropped_center_x - left_w - x0
+                    bboxes[:, 1:4:2] += cropped_center_y - top_h - y0
+                    if self.bbox_clip_border:
+                        bboxes[:, 0:4:2] = np.clip(bboxes[:, 0:4:2], 0, new_w)
+                        bboxes[:, 1:4:2] = np.clip(bboxes[:, 1:4:2], 0, new_h)
+                    keep = (bboxes[:, 2] > bboxes[:, 0]) & (
+                        bboxes[:, 3] > bboxes[:, 1])
+                    bboxes = bboxes[keep]
+                    results[key] = bboxes
+                    if key in ['gt_bboxes']:
+                        if 'gt_labels' in results:
+                            labels = results['gt_labels'][mask]
+                            labels = labels[keep]
                             results['gt_labels'] = labels
-                    else:
-                        # Если размеры не совпадают, создаем пустые labels
-                        results['gt_labels'] = np.zeros((0,), dtype=np.int64)
-                else:
-                    results['gt_labels'] = np.zeros((0,), dtype=np.int64)
-                    
-            # print(f"Updated {key}: {len(filtered_boxes)} boxes after crop")
+                        if 'gt_masks' in results:
+                            raise NotImplementedError(
+                                'RandomCenterCropPad only supports bbox.')
+
+                # crop semantic seg
+                for key in results.get('seg_fields', []):
+                    raise NotImplementedError(
+                        'RandomCenterCropPad only supports bbox.')
+                return results
 
 
 

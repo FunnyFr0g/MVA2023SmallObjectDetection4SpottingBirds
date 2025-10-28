@@ -14,18 +14,18 @@ GPU_NUM=1
 # bash tools/dist_train.sh  configs/mva2023_baseline/centernet_resnet18_140e_coco.py $GPU_NUM
 
 
-###############################
-# Step 2: fine-tuning on data/mva2023_sod4bird_train
-###############################
-echo "###############################"
-echo "Step 2: fine-tuning on data/mva2023_sod4bird_train"
-echo "###############################"
-bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_finetune.py $GPU_NUM
+# ###############################
+# # Step 2: fine-tuning on data/mva2023_sod4bird_train
+# ###############################
+# echo "###############################"
+# echo "Step 2: fine-tuning on data/mva2023_sod4bird_train"
+# echo "###############################"
+# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_finetune.py $GPU_NUM
 
 
-# ###############################
-# # Step 3: Generate predictions on data/mva2023_sod4bird_train to select hard negatives examples
-# ###############################
+# # ###############################
+# # # Step 3: Generate predictions on data/mva2023_sod4bird_train to select hard negatives examples
+# # ###############################
 # echo "###############################"
 # echo "Step 3: Generate predictions on data/mva2023_sod4bird_train to select hard negatives examples"
 # echo "###############################"
@@ -57,10 +57,10 @@ bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_
 ###############################
 # Step 4: Hard negative training  on data/mva2023_sod4bird_train
 ###############################
-# echo "###############################"
-# echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
-# echo "###############################"
-# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
+echo "###############################"
+echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
+echo "###############################"
+bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
 
 
 # ###############################
