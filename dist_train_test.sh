@@ -54,27 +54,27 @@ GPU_NUM=1
 --------------------------
 
 
-###############################
-# Step 4: Hard negative training  on data/mva2023_sod4bird_train
-###############################
-echo "###############################"
-echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
-echo "###############################"
-bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
-
-
 # ###############################
-# # Step 5: To generate the predictions for submission, the result will be saved in results.bbox.json.
+# # Step 4: Hard negative training  on data/mva2023_sod4bird_train
 # ###############################
 # echo "###############################"
-# echo "Step 5: To generate the predictions for submission, the result will be saved in results.bbox.json."
+# echo "Step 4: Hard negative training  on data/mva2023_sod4bird_train"
 # echo "###############################"
-# bash tools/dist_test.sh configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_inference.py work_dirs/centernet_resnet18_140e_coco_hard_negative_training/latest.pth \
-# 2 --format-only --eval-options jsonfile_prefix=results
+# bash tools/dist_train.sh  configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_hard_negative_training.py $GPU_NUM
 
-# _time=`date +%Y%m%d%H%M`
-# mkdir -p submit/${_time}
-# SUBMIT_FILE=`echo ./submit/${_time}/results.json`
-# SUBMIT_ZIP_FILE=`echo ${SUBMIT_FILE//results.json/submit.zip}`
-# mv ./results.bbox.json $SUBMIT_FILE
-# zip $SUBMIT_ZIP_FILE $SUBMIT_FILE
+
+###############################
+# Step 5: To generate the predictions for submission, the result will be saved in results.bbox.json.
+###############################
+echo "###############################"
+echo "Step 5: To generate the predictions for submission, the result will be saved in results.bbox.json."
+echo "###############################"
+bash tools/dist_test.sh configs/mva2023_baseline_copy/centernet_resnet18_140e_coco_inference.py work_dirs/centernet_resnet18_140e_coco_hard_negative_training/latest.pth \
+2 --format-only --eval-options jsonfile_prefix=results
+
+_time=`date +%Y%m%d%H%M`
+mkdir -p submit/${_time}
+SUBMIT_FILE=`echo ./submit/${_time}/results.json`
+SUBMIT_ZIP_FILE=`echo ${SUBMIT_FILE//results.json/submit.zip}`
+mv ./results.bbox.json $SUBMIT_FILE
+zip $SUBMIT_ZIP_FILE $SUBMIT_FILE

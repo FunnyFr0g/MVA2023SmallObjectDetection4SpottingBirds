@@ -120,6 +120,13 @@ def parse_args():
 def main():
     args = parse_args()
 
+    if USE_CLEARML:
+        task = Task.init(
+            project_name="SmallObjectDetection",  # Название проекта
+            task_name="Baseline-hardnegative-predict",    # Название задачи
+            )
+        task.connect(args, name="args")
+
     assert args.out or args.eval or args.format_only or args.show \
         or args.show_dir, \
         ('Please specify at least one operation (save/eval/format/show the '
@@ -264,6 +271,13 @@ def main():
             metric_dict = dict(config=args.config, metric=metric)
             if args.work_dir is not None and rank == 0:
                 mmcv.dump(metric_dict, json_file)
+
+      if USE_CLEARML:
+        task.upload_artifact(
+        name='work_dir',
+        artifact_object=args.work_dir,
+        )
+  
 
 
 if __name__ == '__main__':
