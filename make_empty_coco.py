@@ -7,7 +7,7 @@ def create_images_only_coco():
     """
     
     # УКАЖИТЕ ВАШИ ПУТИ К ФАЙЛАМ ЗДЕСЬ
-    input_file = '/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/val_annotations_class0.json'  # Путь к исходному COCO JSON файлу
+    input_file = '/clearml_agent_cache/storage_manager/datasets/ds_ae8c12c33b324947af9ae6379d920eb8/coco_annotations_val.json' #val_annotations_class0.json'  # Путь к исходному COCO JSON файлу
     output_file = "/root/mva23/MVA2023SmallObjectDetection4SpottingBirds/anns/empty_val_annotations.json"  # Путь для сохранения нового JSON файла
     
     try:

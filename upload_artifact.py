@@ -1,6 +1,6 @@
 from clearml import Task
 
-task = Task.get_task(task_id='f2a541768d774634845430be688f5a4b')
+task = Task.get_task(task_id='9f2b543b673e40e7839964e053f3e31f')
 
 task.started()
 
